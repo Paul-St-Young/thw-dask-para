@@ -4,11 +4,11 @@ from pylib.sugar import cache
 from pylib.sk import legal_kvecs, Sk, shavg
 
 @cache
-def cache_sofk(fout, fjson, Sk, nx=6, verbose=True, para=True):
+def cache_sofk(fout, fjson, Sk, nx, verbose=True, para=True):
   if para:
     import dask
     from dask.distributed import Client, progress
-    client = Client()
+    client = Client(processes=False)
     Sk = dask.delayed(Sk)
 
   import pandas as pd
@@ -54,7 +54,7 @@ if __name__ == '__main__':
   parser = ArgumentParser()
   parser.add_argument('fjson',
     help='database containing ["box", "positions"]')
-  args = parser.add_argument('--nx', type=int, default=16,
+  args = parser.add_argument('--nx', type=int, default=14,
     help='number of shells to use along each direction')
   args = parser.add_argument('--serial', action='store_true',
     help='run in serial, i.e. disable dask parallelization')

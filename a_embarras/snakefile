@@ -1,6 +1,8 @@
 rule all:
   input:
-    "speedup.txt"#"serial.out", "para.out"
+    "speedup.txt"
+  shell:
+    "cat speedup.txt"
 
 rule untar:
   input:
@@ -50,7 +52,6 @@ rule calc_speedup:
     msg  = 'serial   time: %8.6f s\n' % tserial
     msg += 'parallel time: %8.6f s\n' % tpara
     msg += 'speedup = %3.2f' % (tserial/tpara)
-    print(msg)
     with open(output.fout, 'w') as f:
       f.write(msg)
 
