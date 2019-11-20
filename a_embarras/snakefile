@@ -1,6 +1,6 @@
 rule all:
   input:
-    "serial.out", "para.out"
+    "speedup.txt"#"serial.out", "para.out"
 
 rule untar:
   input:
@@ -33,3 +33,23 @@ rule run_parallel:
     "para.out"
   shell:
     "python3 h2sk_para.py {input} > {output}"
+
+rule calc_speedup:
+  input:
+    sout="serial.out",
+    pout="para.out"
+  output:
+    fout="speedup.txt"
+  run:
+    with open(input.sout, 'r') as f:
+      lines = f.readlines()
+    tserial = float(lines[-1].split()[2])
+    with open(input.pout, 'r') as f:
+      lines = f.readlines()
+    tpara = float(lines[-1].split()[2])
+    msg  = 'serial   time: %8.6f s\n' % tserial
+    msg += 'parallel time: %8.6f s\n' % tpara
+    msg += 'speedup = %3.2f' % (tserial/tpara)
+    print(msg)
+    with open(output.fout, 'w') as f:
+      f.write(msg)
