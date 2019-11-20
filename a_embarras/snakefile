@@ -53,3 +53,9 @@ rule calc_speedup:
     print(msg)
     with open(output.fout, 'w') as f:
       f.write(msg)
+
+rule clean:
+  shell:
+    '''
+    rm -rf serial para serial.out para.out speedup.txt
+    '''
