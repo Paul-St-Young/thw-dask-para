@@ -1,0 +1,35 @@
+rule all:
+  input:
+    "serial.out", "para.out"
+
+rule untar:
+  input:
+    "confs/rs1.49T2000N2592-h2.tgz"
+  output:
+    "serial/rs1.49T2000N2592-h2.json"
+  shell:
+    "tar -zxvf {input} -C serial"
+
+rule copy:
+  input:
+    "serial/rs1.49T2000N2592-h2.json"
+  output:
+    "para/rs1.49T2000N2592-h2.json"
+  shell:
+    "cp {input} {output}"
+
+rule run_serial:
+  input:
+    "serial/rs1.49T2000N2592-h2.json"
+  output:
+    "serial.out"
+  shell:
+    "python3 h2sk_para.py --serial {input} > {output}"
+
+rule run_parallel:
+  input:
+    "para/rs1.49T2000N2592-h2.json"
+  output:
+    "para.out"
+  shell:
+    "python3 h2sk_para.py {input} > {output}"
